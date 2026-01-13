@@ -13,7 +13,7 @@ export default function Dashboard() {
 
     // Initialize Socket
     useEffect(() => {
-        const newSocket = io('/', { path: '/socket.io' });
+        const newSocket = io(import.meta.env.VITE_API_URL || '/', { path: '/socket.io' });
         setSocket(newSocket);
         return () => newSocket.close();
     }, []);
