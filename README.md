@@ -2,6 +2,23 @@
 
 A full-stack application for secure video uploading, AI-powered sensitivity analysis, and memory-efficient streaming.
 
+## 🌍 Deployment
+
+**Live Application:** [https://video-flow-xi.vercel.app](https://video-flow-xi.vercel.app)
+
+*   **Frontend**: Vercel
+*   **Backend**: Render
+*   **Database**: MongoDB Atlas
+
+### Storage Note
+Uploaded videos are stored on the backend server’s local filesystem.
+For sensitivity analysis, videos are temporarily uploaded to Google Gemini and deleted immediately after analysis.
+This approach satisfies the assignment requirement for local file storage.
+
+> **⚠️ Deployment Note (Ephemeral Storage)**
+> This demo is hosted on **Render's Free Tier**. Since the assignment permits "Local Storage," videos are saved to the server's ephemeral filesystem.
+> *   **Note:** Uploaded videos **will be deleted** when the server spins down (after ~15 minutes of inactivity).
+
 ---
 
 ## 🚀 Features
@@ -26,12 +43,12 @@ A full-stack application for secure video uploading, AI-powered sensitivity anal
 
 ## 🛠️ Tech Stack
 
-*   **Backend**: Node.js, Express.js
-*   **Database**: MongoDB (Mongoose ODM)
+*   **Frontend**: React (Vite) on **Vercel**
+*   **Backend**: Node.js, Express.js on **Render**
+*   **Database**: MongoDB Atlas (Cloud)
+*   **Storage**: Local filesystem (Render Free Tier – ephemeral)
+*   **AI Service**: Google Gemini Flash
 *   **Real-time**: Socket.io
-*   **Frontend**: React (Vite)
-*   **Language**: JavaScript (ES6+)
-*   **AI Service**: Google Generative AI (Gemini)
 
 ---
 
@@ -42,7 +59,7 @@ A full-stack application for secure video uploading, AI-powered sensitivity anal
 *   MongoDB (Running locally on port 27017 or a valid connection URI)
 
 ### 1. Backend Setup
-1.  Navigate to the server directory (where `package.json` is):
+1.  Navigate to the server directory:
     ```bash
     cd server
     ```
@@ -79,20 +96,20 @@ A full-stack application for secure video uploading, AI-powered sensitivity anal
     ```bash
     npm run dev
     ```
-4.  Open `http://localhost:5173` in your browser.
+4.  Open `http://localhost:5173`.
 
 ---
 
 ## 📖 User Manual
 
 ### User Roles
-*   Upon registration, you can select a role:
-    *   **Viewer**: Use this to simulate a read-only user.
-    *   **Editor**: Standard user with upload capabilities.
-    *   **Admin**: Superuser with dashboard management features.
+*   **Viewer**: Read-only user.
+    *   *Note: Viewer accounts are read-only and can view videos only when assigned by an Admin. If no videos are assigned, the Viewer dashboard will be empty by design.*
+*   **Editor**: Standard user with upload capabilities.
+*   **Admin**: Superuser with dashboard management features.
 
 ### Workflow
-1.  **Register/Login**: create an account.
+1.  **Register/Login**: Create an account.
 2.  **Upload**:
     *   Click the "Upload Area" or drag a file.
     *   Enter a Title and select/type a Category.
@@ -156,5 +173,19 @@ To manually verify the system:
 2.  **Refresh**: Note that you *don't* need to refresh the page to see the new video appear; Socket.io handles it.
 3.  **Stream**: Click the play button. Try seeking to the middle of the video (verifies Range requests).
 4.  **Filter**: Type a custom category during upload (e.g., "Demo"). Use the category filter to find it.
+
+---
+
+## ⚠️ Assumptions and Limitations
+
+1.  **Ephemeral Storage (Assignment Scope)**:
+    *   This demo is hosted on **Render's Free Tier** which uses an ephemeral filesystem.
+    *   **Limitation**: All uploaded videos are **automatically deleted** when the server spins down due to inactivity (~15 minutes).
+    *   **Production Solution**: In a real-world scenario, this would be replaced by persistent cloud storage like **AWS S3** or **Google Cloud Storage**.
+
+2.  **Scalability & AI Processing**:
+    *   **Current State**: Video analysis is triggered synchronously after upload.
+    *   **Limitation**: Heavy traffic could hit Gemini API rate limits or block the Node.js event loop.
+    *   **Production Solution**: A robust system would implement a **Message Queue** (e.g., RabbitMQ) to decouple uploads from analysis, allowing for horizontal scaling and better fault tolerance.
 
 

@@ -77,4 +77,12 @@ To detect "unsafe" content, we implement an asynchronous processing pipeline.
 | :--- | :--- | :--- | :--- |
 | **I/O Model** | **Node.js Streams** | Buffer/In-Memory | **Critically Important**. Videos are large (GBs). Buffering crashes the heap. Streams keep memory footprint constant (~chunk size) regardless of file size. |
 | **Progress Updates** | **Socket.io** | Short Polling | Video processing (transcoding/upload) is long-running. Polling wastes resources with empty checks. **Socket.io** provides an event-driven, real-time UX (e.g., "Processing: 45%") which is superior for engagement. |
+| **File Storage** | **Local Filesystem** (Ephemeral) | AWS S3 / Cloudinary | **Assignment Scope**: The requirements explicitly permitted "Local Storage." To minimize complexity and utilize the Gemini Files API efficiently for the demo, I opted for local storage. In a real-world production environment, this would be replaced with an S3 Adapter for persistence. |
+
+## 6. Deployment Architecture
+
+*   **Frontend**: Deployed on **Vercel** as a React Vite application.
+*   **Backend**: Deployed on **Render** as a long-running Node.js service with WebSocket support.
+*   **MongoDB Atlas**: Used for persistent metadata storage.
+*   **Storage**: Video files are stored on the Render's (backend) filesystem and streamed via HTTP range requests.
 
