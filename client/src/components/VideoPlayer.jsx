@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 
 export default function VideoPlayer({ videoId, mimeType }) {
     const token = localStorage.getItem('token');
-    const videoSrc = `/api/videos/stream/${videoId}?token=${token}`;
+    const videoSrc = `${import.meta.env.VITE_API_URL || ''}/api/videos/stream/${videoId}?token=${token}`;
 
     return (
         <div style={{ marginTop: '1rem', background: '#000' }}>
